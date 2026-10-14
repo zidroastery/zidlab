@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZID COFFEE ROASTERY AND LAB</title>
+    <style>
+        :root { 
+            --p: #4796d9; 
+            --pd: #5ca8ec; 
+            --pl: rgba(71, 150, 217, 0.18); 
+            --t: #f5f5f7; 
+            --ts: #a1a1a6; 
+            --glass-card: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            --glass-banner: linear-gradient(135deg, rgba(71, 150, 217, 0.3) 0%, rgba(22, 43, 77, 0.6) 100%);
+            --border-subtle: rgba(255, 255, 255, 0.12);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+        
+        body { 
+            background: radial-gradient(circle at 20% 20%, #173859 0%, #0b131d 50%, #05080e 100%);
+            color: var(--t); 
+            min-height: 100vh; 
+            padding-bottom: 110px; 
+            background-attachment: fixed;
+        }
+
+        /* Header Glass */
+        header { 
+            background: rgba(18, 24, 33, 0.75); 
+            backdrop-filter: blur(25px); 
+            -webkit-backdrop-filter: blur(25px); 
+            border-bottom: 1px solid var(--border-subtle); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            padding: 14px 20px; 
+            text-align: center; 
+        }
+        h1 { font-size: 1.15rem; font-weight: 700; background: linear-gradient(135deg, #7cbbf4, var(--p)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .sub { font-size: 0.72rem; color: var(--ts); font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; margin-top: 2px; }
+        .socials { display: flex; gap: 8px; justify-content: center; margin-top: 10px; }
+        .s-btn { 
+            padding: 6px 12px; 
+            border-radius: 20px; 
+            background: rgba(255, 255, 255, 0.06); 
+            color: #7cbbf4; 
+            text-decoration: none; 
+            font-weight: 600; 
+            font-size: 0.75rem; 
+            transition: all 0.25s ease; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 5px; 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(10px);
+            will-change: transform;
+        }
+        .s-btn:hover { background: var(--p); color: #fff; transform: scale(1.04); }
+        .s-btn svg { fill: currentColor; width: 14px; height: 14px; }
+
+        /* Segmented Control Glass */
+        .tabs { display: flex; justify-content: center; padding: 14px 16px 6px; }
+        .seg { 
+            display: flex; 
+            background: rgba(255, 255, 255, 0.05); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            padding: 4px; 
+            border-radius: 14px; 
+            width: 100%; 
+            max-width: 500px; 
+            border: 1px solid var(--border-subtle); 
+        }
+        .t-btn { flex: 1; padding: 8px 2px; text-align: center; font-size: 0.75rem; font-weight: 600; color: var(--ts); background: transparent; border: none; border-radius: 10px; cursor: pointer; transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .t-btn.active { 
+            background: rgba(255, 255, 255, 0.15); 
+            color: #ffffff; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .container { max-width: 680px; margin: 0 auto; padding: 12px 16px; }
+        .sec { display: none; }
+        .sec.active { display: block; animation: fade 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Glass Section Outer Wrapper */
+        .glass-section-wrapper {
+            background: var(--glass-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 16px 14px;
+            margin-top: 14px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Accordion Kategori & Kursus */
+        .category-card, .course-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            will-change: transform;
+        }
+
+        .category-card.open, .course-card.open {
+            border-color: rgba(124, 187, 244, 0.4);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+        }
+
+        .category-header, .course-header {
+            padding: 16px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.25s ease;
+        }
+        .category-header:hover, .course-header:hover { background: rgba(255, 255, 255, 0.05); }
+
+        .cat-title {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: #7cbbf4;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .arrow-icon {
+            fill: var(--ts);
+            width: 18px;
+            height: 18px;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), fill 0.3s ease;
+            will-change: transform;
+        }
+        .category-card.open .arrow-icon, .course-card.open .arrow-icon {
+            transform: rotate(180deg);
+            fill: #7cbbf4;
+        }
+
+        /* Pure CSS Grid Smooth Dropdown Animation (120Hz) */
+        .accordion-body-wrapper {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: grid-template-rows;
+        }
+
+        .category-card.open .accordion-body-wrapper,
+        .course-card.open .accordion-body-wrapper {
+            grid-template-rows: 1fr;
+        }
+
+        .accordion-body {
+            overflow: hidden;
+        }
+
+        .accordion-content-inner {
+            padding: 4px 14px 14px 14px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.05s, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.05s;
+            will-change: opacity, transform;
+        }
+
+        .category-card.open .accordion-content-inner,
+        .course-card.open .accordion-content-inner {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Items Inside Category */
+        .card { 
+            background: var(--glass-card); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px); 
+            border: 1px solid var(--border-subtle); 
+            border-radius: 12px; 
+            padding: 12px 14px; 
+            margin-top: 8px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .card:hover { border-color: rgba(71, 150, 217, 0.4); }
+        .card:active { transform: scale(0.98); }
+        .title { font-size: 0.88rem; font-weight: 600; color: #f5f5f7; }
+        .meta { font-size: 0.76rem; color: var(--ts); margin-top: 2px; }
+        .price { font-size: 0.88rem; font-weight: 700; color: #7cbbf4; margin-top: 4px; }
+        
+        .act-btn { 
+            background: linear-gradient(135deg, rgba(71, 150, 217, 0.8), rgba(40, 93, 143, 0.9)); 
+            color: #fff; 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            padding: 7px 12px; 
+            border-radius: 9px; 
+            font-size: 0.78rem; 
+            font-weight: 600; 
+            cursor: pointer; 
+            text-decoration: none; 
+            white-space: nowrap; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3); 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 5px; 
+            backdrop-filter: blur(5px);
+        }
+        .act-btn svg { fill: currentColor; width: 13px; height: 13px; }
+
+        /* Detail Kursus Inside Accordion */
+        .course-desc { font-size: 0.82rem; color: var(--ts); line-height: 1.5; margin: 8px 0 12px; }
+        .course-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 6px; 
+            font-size: 0.78rem; 
+            background: rgba(255, 255, 255, 0.04); 
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 10px 12px; 
+            border-radius: 8px; 
+            color: var(--ts); 
+        }
+        .course-grid strong { color: var(--t); }
+        .inst { font-size: 0.75rem; color: #a1a1a6; font-style: italic; margin: 12px 0; border-left: 2px solid var(--p); padding-left: 8px; }
+        
+        .c-foot { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-top: 1px solid rgba(255,255,255,0.08); 
+            padding-top: 12px; 
+            margin-top: 4px;
+        }
+
+        /* Banner Glass Effect */
+        .banner { 
+            background: var(--glass-banner); 
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            color: #fff; 
+            border-radius: 18px; 
+            padding: 24px; 
+            text-align: center; 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+        .banner h2 { font-size: 1.15rem; margin-bottom: 6px; }
+        .banner p { font-size: 0.82rem; opacity: 0.9; margin-bottom: 16px; line-height: 1.4; }
+        .btn-w { 
+            background: rgba(255, 255, 255, 0.9); 
+            color: #0b131d; 
+            padding: 9px 18px; 
+            border-radius: 10px; 
+            font-weight: 700; 
+            font-size: 0.82rem; 
+            text-decoration: none; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 6px; 
+            box-shadow: 0 4px 15px rgba(255,255,255,0.2);
+        }
+        .btn-w svg { fill: #25d366; width: 16px; height: 16px; }
+
+        /* Floating WA */
+        @keyframes pulse { 0%,100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37,211,102,0.5); } 50% { transform: scale(1.06); box-shadow: 0 0 0 12px rgba(37,211,102,0); } }
+        .float-wa { 
+            position: fixed; 
+            bottom: 20px; 
+            right: 20px; 
+            background: #25d366; 
+            color: #fff; 
+            width: 52px; 
+            height: 52px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            text-decoration: none; 
+            z-index: 1000; 
+            animation: pulse 2.5s infinite; 
+            box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4); 
+        }
+        .float-wa svg { fill: #fff; width: 28px; height: 28px; }
+
+        /* Bottom Bar Glass */
+        .bar { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            width: 100%; 
+            background: rgba(18, 24, 33, 0.8); 
+            backdrop-filter: blur(25px); 
+            -webkit-backdrop-filter: blur(25px); 
+            border-top: 1px solid var(--border-subtle); 
+            padding: 10px 16px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            z-index: 90; 
+            font-size: 0.82rem; 
+            font-weight: 600; 
+        }
+
+        .loc { 
+            margin-top: 16px; 
+            background: var(--glass-card); 
+            backdrop-filter: blur(10px);
+            border: 1px dashed var(--p); 
+            border-radius: 12px; 
+            padding: 12px; 
+            text-align: center; 
+        }
+        .loc a { color: #7cbbf4; font-weight: 600; text-decoration: none; font-size: 0.82rem; display: inline-flex; align-items: center; gap: 6px; }
+        .loc svg { fill: #7cbbf4; width: 14px; height: 14px; }
+        footer { text-align: center; margin-top: 30px; font-size: 0.72rem; color: var(--ts); padding-bottom: 30px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>ZID COFFEE ROASTERY AND LAB</h1>
+        <div class="sub">Indonesia – Aceh</div>
+        <div class="socials">
+            <a href="https://www.instagram.com/zidroastery/" target="_blank" class="s-btn">
+                <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                Instagram
+            </a>
+            <a href="https://id.shp.ee/BKPJhTfN" target="_blank" class="s-btn">
+                <svg viewBox="0 0 24 24"><path d="M19.387 19.381c0 .823-.667 1.49-1.49 1.49H6.103a1.49 1.49 0 0 1-1.49-1.49V9.167h14.774v10.214zM16.038 5.43c0-2.235-1.803-4.04-4.038-4.04-2.235 0-4.038 1.805-4.038 4.04V9.167h8.076V5.43zM12 0a5.534 5.534 0 0 0-5.528 5.43v3.737H2.94a1.49 1.49 0 0 0-1.49 1.49v10.214c0 1.645 1.335 2.98 2.98 2.98h15.14a2.98 2.98 0 0 0 2.98-2.98V10.657a1.49 1.49 0 0 0-1.49-1.49h-3.534V5.43A5.534 5.534 0 0 0 12 0z"/></svg>
+                Shopee
+            </a>
+            <a href="https://maps.app.goo.gl/IW1kXw5ehoeQ9ieDY" target="_blank" class="s-btn">
+                <svg viewBox="0 0 24 24"><path d="M12 0C7.58 0 4 3.58 4 8c0 5.25 8 16 8 16s8-10.75 8-16c0-4.42-3.58-8-8-8zm0 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/></svg>
+                Lokasi
+            </a>
+        </div>
+    </header>
+
+    <div class="tabs">
+        <div class="seg">
+            <button class="t-btn active" onclick="tab('beans', this)">Roasted Beans</button>
+            <button class="t-btn" onclick="tab('courses', this)">Program Kursus</button>
+            <button class="t-btn" onclick="tab('roasting', this)">Jasa Roasting</button>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <!-- TAB BEANS -->
+        <div id="beans" class="sec active">
+            <div class="glass-section-wrapper">
+                <script>
+                    const waIcon = `<svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>`;
+                    
+                    const beans = [
+                        {c:'VARIAN KOPI INDONESIA - ACEH', items:[
+                            ['Arabica Gayo Full Wash Wet Hull','200 g','Rp75.000'],
+                            ['Arabica Gayo Natural Anaerob','200 g','Rp105.000'],
+                            ['Arabica Gayo Wine','200 g','Rp100.000'],
+                            ['Liberica Tangse','100 g','Rp85.000'],
+                            ['Arabica Gayo EVO Wash','200 g','Rp105.000'],
+                            ['Arabica Gayo Pink Honey','200 g','Rp115.000']
+                        ]},
+                        {c:'VARIAN KOPI INDONESIA NUSANTARA', items:[
+                            ['Arabica Galunggung Honey Pichia','200 g','Rp105.000'],
+                            ['Excelsa Malang','100 g','Rp90.000'],
+                            ['Robusta 1st Jawara Coffee Competition','100 g','Rp120.000']
+                        ]},
+                        {c:'VARIAN KOPI INTERNATIONAL', items:[
+                            ['Santa Cruz Coco Natural','100 g','Rp220.000'],
+                            ['Ethiopia Mewa Yusuf Natural','100 g','Rp190.000']
+                        ]}
+                    ];
+
+                    let html = '';
+                    beans.forEach((group, idx) => {
+                        html += `
+                        <div class="category-card" id="cat-card-${idx}">
+                            <div class="category-header" onclick="toggleCategory(${idx})">
+                                <div class="cat-title">${group.c}</div>
+                                <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                            </div>
+                            <div class="accordion-body-wrapper">
+                                <div class="accordion-body">
+                                    <div class="accordion-content-inner">`;
+                        
+                        group.items.forEach(i => {
+                            html += `
+                            <div class="card">
+                                <div>
+                                    <div class="title">${i[0]}</div>
+                                    <div class="meta">${i[1]}</div>
+                                    <div class="price">${i[2]}</div>
+                                </div>
+                                <button class="act-btn" onclick="order('${i[0]} (${i[1]}) - ${i[2]}')">${waIcon} Pesan WA</button>
+                            </div>`;
+                        });
+
+                        html += `
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                    });
+                    document.write(html);
+                </script>
+
+                <div class="loc">
+                    <a href="https://maps.app.goo.gl/IW1kXw5ehoeQ9ieDY" target="_blank">
+                        <svg viewBox="0 0 24 24"><path d="M12 0C7.58 0 4 3.58 4 8c0 5.25 8 16 8 16s8-10.75 8-16c0-4.42-3.58-8-8-8zm0 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/></svg>
+                        Lokasi Zid Coffee Roastery & Lab di Google Maps
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB COURSES -->
+        <div id="courses" class="sec">
+            <div class="glass-section-wrapper">
+                <div class="cat-title" style="margin: 0 0 14px 4px;">PROGRAM PELATIHAN & LAB</div>
+                <script>
+                    const courses = [
+                        ['Manual Brew Level 1','Pelatihan dasar manual brew: karakter pasca panen, rasio, grind size, dan teknik pouring.','09.00 - 14.00','4 Orang','Rp350.000'],
+                        ['Espresso & Milk Level 1','Pembuatan espresso menyeluruh, dose, yield, waktu ekstraksi, steaming milk & latte art.','09.00 - 14.00','4 Orang','Rp800.000'],
+                        ['Sensory Level 1','Evaluasi rasa & aroma (sweet, sour, bitter) serta korelasi proses pasca panen.','09.00 - 14.00','4 Orang','Rp450.000'],
+                        ['Coffee Cupping Level 1','Standar evaluasi kualitas, cupping form, green grading, dan cupping praktik.','09.00 - 14.00','4 Orang','Rp400.000'],
+                        ['Kopi Aceh Class','Budaya & teknik Kopi Aceh, roasting, saring tradisional, dan menu warkop Aceh.','09.00 - 14.00','4 Orang','Rp1.500.000'],
+                        ['Basic Barista Combo Class','Program komprehensif intensif gabungan Manual Brew, Espresso, dan Cupping Level 1.','Durasi 11 Jam','4 Orang','Rp1.400.000']
+                    ];
+                    let cHtml = '';
+                    courses.forEach((c, index) => {
+                        cHtml += `<div class="course-card" id="course-card-${index}">
+                            <div class="course-header" onclick="toggleCourse(${index})">
+                                <div>
+                                    <div class="title" style="font-size:0.95rem">${c[0]}</div>
+                                </div>
+                                <svg class="arrow-icon" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                            </div>
+                            <div class="accordion-body-wrapper">
+                                <div class="accordion-body">
+                                    <div class="accordion-content-inner">
+                                        <div class="course-desc">${c[1]}</div>
+                                        <div class="course-grid"><span>Waktu/Durasi: <strong>${c[2]}</strong></span><span>Kuota: <strong>${c[3]}</strong></span></div>
+                                        <div class="inst">Instruktur: Aryo Kuncorojati (BNSP Barista/Instruktur, CQI Q Grader, SCA CVA)</div>
+                                        <div class="c-foot">
+                                            <div class="price" style="font-size:1rem;">${c[4]}</div>
+                                            <button class="act-btn" onclick="order('Kursus ${c[0]} (${c[4]})')">${waIcon} Daftar Kursus</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                    });
+                    document.write(cHtml);
+                </script>
+            </div>
+        </div>
+
+        <!-- TAB ROASTING -->
+        <div id="roasting" class="sec">
+            <div style="margin-top: 14px;">
+                <div class="banner">
+                    <h2>Layanan Roasting & Q-Grader</h2>
+                    <p>Konsultasi profil roasting custom dan uji grading profesional bersama Q Grader bersertifikasi internasional.</p>
+                    <a href="https://wa.me/6285161412506?text=Halo%20Zid%20Coffee%20Roastery%20and%20Lab,%20saya%20ingin%20berkonsultasi%20mengenai%20jasa%20roasting%20kopi%20dan%20gradering." target="_blank" class="btn-w">
+                        <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654z"/></svg>
+                        Konsultasi via WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Floating WA -->
+    <a href="https://wa.me/6285161412506?text=Halo%20Zid%20Coffee%20Roastery%20and%20Lab," target="_blank" class="float-wa" title="Pesan WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654z"/></svg>
+    </a>
+
+    <!-- Bottom Bar Glass -->
+    <div class="bar">
+        <span>ZID COFFEE ROASTERY & LAB</span>
+        <div style="display:flex; gap:6px;">
+            <a href="https://id.shp.ee/BKPJhTfN" target="_blank" class="act-btn" style="background: linear-gradient(135deg, #ee4d2d, #c4381c); box-shadow:none;">
+                <svg viewBox="0 0 24 24"><path d="M19.387 19.381c0 .823-.667 1.49-1.49 1.49H6.103a1.49 1.49 0 0 1-1.49-1.49V9.167h14.774v10.214zM16.038 5.43c0-2.235-1.803-4.04-4.038-4.04-2.235 0-4.038 1.805-4.038 4.04V9.167h8.076V5.43zM12 0a5.534 5.534 0 0 0-5.528 5.43v3.737H2.94a1.49 1.49 0 0 0-1.49 1.49v10.214c0 1.645 1.335 2.98 2.98 2.98h15.14a2.98 2.98 0 0 0 2.98-2.98V10.657a1.49 1.49 0 0 0-1.49-1.49h-3.534V5.43A5.534 5.534 0 0 0 12 0z"/></svg>
+                Shopee
+            </a>
+            <a href="https://wa.me/6285161412506" target="_blank" class="act-btn">
+                <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654z"/></svg>
+                WhatsApp
+            </a>
+        </div>
+    </div>
+
+    <footer>&copy; 2026 ZID COFFEE ROASTERY AND LAB. Indonesia – Aceh</footer>
+
+    <script>
+        function tab(id, btn) {
+            document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.t-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            btn.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleCategory(index) {
+            const targetCard = document.getElementById(`cat-card-${index}`);
+            const isOpen = targetCard.classList.contains('open');
+
+            document.querySelectorAll('#beans .category-card').forEach(card => {
+                card.classList.remove('open');
+            });
+
+            if (!isOpen) {
+                targetCard.classList.add('open');
+            }
+        }
+
+        function toggleCourse(index) {
+            const targetCard = document.getElementById(`course-card-${index}`);
+            const isOpen = targetCard.classList.contains('open');
+
+            document.querySelectorAll('#courses .course-card').forEach(card => {
+                card.classList.remove('open');
+            });
+
+            if (!isOpen) {
+                targetCard.classList.add('open');
+            }
+        }
+
+        function order(txt) {
+            window.open(`https://wa.me/6285161412506?text=${encodeURIComponent('Halo Zid Coffee Roastery and Lab, saya ingin memesan/mendaftar:\n\n*' + txt + '*')}`, '_blank');
+        }
+    </script>
+</body>
+</html>
